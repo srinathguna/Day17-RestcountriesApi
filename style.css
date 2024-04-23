@@ -1,4 +1,7 @@
-#modal{
+.popup{
+    display: none;
+}
+.popup.style{
     height: 100%;
     width: 100%;
     position: fixed;
@@ -12,15 +15,18 @@
     justify-content: center;
     align-items: center;
 }
-#dialogmodal{
+.popupinner{
     width: 400px;
-    height: 300px;
+    height: 250px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     background-color: #fff;
     border-radius: 4px;
+}
+label{
+    font-size: 16px;
 }
 @media screen and (max-width:575px) {
     .col-sm-12 {

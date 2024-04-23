@@ -12,23 +12,23 @@ const divElement = (createElement("div", {
     class: "container"
 }))
 const rowElement = (createElement("div", {
-    class: "row"
+    class: "row" 
 }))
 const colElement = (createElement("div", {
-    class: "col-xl-12 d-flex flex-wrap"
+    class: "col col-xl-12 col-lg-12 col-md-12 col-sm-12 d-flex flex-wrap"
 }))
 document.body.appendChild(divElement)
+divElement.appendChild(colElement)
 divElement.appendChild(rowElement)
-rowElement.appendChild(colElement)
 
 const modalElement = (createElement("div", {
-    class: "text-center",
+    class: "text-center popup",
     id: 'modal',
 }))
 document.body.appendChild(modalElement)
 
 const dialogmodalElement = (createElement("div", {
-    class: "text-center",
+    class: "text-center popupinner",
     id: 'dialogmodal',
 }))
 modalElement.appendChild(dialogmodalElement)
@@ -50,71 +50,97 @@ const windElement = (createElement("h4", {
     id: 'temp'
 }))
 dialogmodalElement.appendChild(windElement);
+
+const okbtnElement = (createElement("button", {
+    class: "btn btn-primary col-xl-6 text-center",
+    id: 'button',
+    value: 'Ok'
+}))
+okbtnElement.innerHTML = "Ok"
+dialogmodalElement.appendChild(okbtnElement);
+
+modalElement.addEventListener('click', () => {
+    modalElement.classList.remove('style');
+})
+dialogmodalElement.addEventListener('click', (e) => {
+    e.stopPropagation()
+})
+okbtnElement.addEventListener('click', () => {
+    modalElement.classList.remove('style');
+})
+
 //fetching the details
 fetch('https://restcountries.com/v3.1/all')
     .then(res => res.json())
     .then(data => {
         data.map((item) => {
             const cardcolElement = (createElement("div", {
-                class: "col-xl-3 col-lg-4 col-md-6 col-sm-12"
+                class: "col col-12 col-xl-3 col-lg-4 col-md-6 col-sm-12"
             }))
-            colElement.appendChild(cardcolElement)
+            rowElement.appendChild(cardcolElement)
 
             const cardElement = (createElement("div", {
-                class: "card"
+                class: "card col-xl-12 my-2"
             }))
             cardcolElement.appendChild(cardElement)
 
-            const headElement = (createElement("h1", {
-                class: "text-center",
+            const headElement = (createElement("div", {
+                class: "card-header text-center",
                 id: 'title'
             }))
             cardElement.appendChild(headElement)
 
-            headElement.innerHTML = `${item.name.common}`
+            headElement.innerText = item.name.common
+            
+            const cardbodyElement = (createElement("div", {
+                class: "card-body text-center",
+                id: 'title'
+            }))
+            cardElement.appendChild(cardbodyElement)
 
             const imgElement = (createElement("img", {
-                class: "text-center",
-                img: "img-fluid",
-                src: `${item.flags.png}`
+                class: "card-img-top text-center img-fluid",
+                src: item.flags.png,
+                alt: `${item.flag}`
             }))
-            cardElement.appendChild(imgElement)
-
+            cardbodyElement.appendChild(imgElement)
             const capitalElement = (createElement("span", {
                 class: "text-center",
                 id: 'capital'
             }))
-            cardElement.appendChild(capitalElement)
+            cardbodyElement.appendChild(capitalElement)
             capitalElement.innerHTML = `Capital: ${item.capital}`
 
             const regionElement = (createElement("span", {
                 class: "text-center",
                 id: 'region'
             }))
-            cardElement.appendChild(regionElement)
+            cardbodyElement.appendChild(regionElement)
             regionElement.innerHTML = `Region: ${item.region}`
 
             const countrycodeElement = (createElement("span", {
                 class: "text-center",
                 id: 'countrycode'
             }))
-            cardElement.appendChild(countrycodeElement)
-            countrycodeElement.innerHTML = `Region: ${item.countrycode}`
+            cardbodyElement.appendChild(countrycodeElement)
+            countrycodeElement.innerHTML = `population: ${item.population}`
 
             const weatherBtn = (createElement("button", {
-                class: "text-center weather",
+                class: "btn btn-primary text-center weather",
                 id: 'weatherbtn',
             }))
             cardElement.appendChild(weatherBtn)
             weatherBtn.innerHTML = `Click for Weather`
 
             weatherBtn.addEventListener('click', () => {
+                modalElement.classList.add('style');
+                // alert('welcome')
                 fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${item.latlng[0]}&lon=${item.latlng[1]}&appid=${key}`)
                     .then(res => res.json())
                     .then(data => {
-                        tempElement.innerHTML = `${data.main.temp}`
-                        descElement.innerHTML = `${data.weather[0].description}`
-                        windElement.innerHTML = `${data.wind.speed}`
+                        tempElement.innerHTML = `<label>Temperature:</label> ${data.main.temp}`
+                        descElement.innerHTML = `<label>Weather:</label>${data.weather[0].description}`
+                        windElement.innerHTML = `<label>Windspeed:</label>${data.wind.speed}`
                     })
             })
 
